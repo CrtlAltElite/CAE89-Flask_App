@@ -1,0 +1,17 @@
+{% extends 'base.html.j2' %}
+
+{% block title %}
+Students
+{% endblock %}
+
+{% block content %}
+<h1>My Students</h1>
+
+<ul>
+    {% for student in students %}
+        <li> {{student}} </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
+
