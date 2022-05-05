@@ -2,8 +2,5 @@ import os
 # CONFIG SECTION
 class Config():
     SECRET_KEY = os.environ.get("SECRET_KEY")
-    REGISTERED_USERS={
-        'kevinb@codingtemple.com':{"name":"Kevin","password":"abc123"},
-        'shohat@codingtemple.com':{"name":"Shoha","password":"Colt45"},
-        'joelc@codingtemple.com':{"name":"Joel", "password":"MorphinTime"}
-    }
+    SQLALCHEMY_DATABASE_URI=os.environ.get("SQLALCHEMY_DATABASE_URI")
+    SQLALCHEMY_TRACK_MODIFICATIONS=os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS")
