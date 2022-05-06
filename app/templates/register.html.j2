@@ -1,24 +1,44 @@
 {% extends 'base.html.j2' %}
 {% block title %}
-Register
+  {% if current_user.is_authenticated %}
+    Edit Profile
+  {% else %}
+    Register
+  {% endif %}
 {% endblock %}
 
 {% block content %}
-<h1>Register</h1>
-<form action="{{url_for('register')}}" method = "POST">
+<h1>
+  {% if current_user.is_authenticated %}
+  Edit Profile
+  {% else %}
+  Register
+  {% endif %}
+</h1>
+<form action="{{url_for('auth.edit_profile') if current_user.is_authenticated else url_for('auth.register')}}" method = "POST">
 
   {{form.hidden_tag()}}
 
   <div>
+  {{form.icon.label(class="form-label")}}
+  <div>
+    {% for subfield in form.icon %}
+      {{subfield}}
+      {{subfield.label | safe}}
+    {% endfor %}
+  </div>
+  </div>
+
+  <div>
   {{form.first_name.label(class="form-label")}}
-  {{form.first_name(class="form-control")}}
+  {{form.first_name(class="form-control", value=current_user.first_name)}}
   {% for error in form.first_name.errors %}
     <small style="color:red;">{{error}}</small>
   {% endfor %}
   </div>
 <div>
   {{form.last_name.label(class="form-label")}}
-  {{form.last_name(class="form-control")}}
+  {{form.last_name(class="form-control", value=current_user.last_name)}}
   {% for error in form.last_name.errors %}
     <small style="color:red;">{{error}}</small>
   {% endfor %}
@@ -26,7 +46,7 @@ Register
 
   <div>
   {{form.email.label(class="form-label")}}
-  {{form.email(class="form-control")}}
+  {{form.email(class="form-control",  value=current_user.email)}}
   {% for error in form.email.errors %}
     <small style="color:red;">{{error}}</small>
   {% endfor %}
