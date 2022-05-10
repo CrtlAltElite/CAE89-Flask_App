@@ -1,0 +1,23 @@
+<div class="card mb-3" style="max-width: 540px;">
+  <div class="row g-0">
+    <div class="col-md-4">
+      <img src="{{post.author.get_icon_url()}}" class="img-fluid rounded-start" alt="avatar">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{post.author.first_name}} {{post.author.last_name}} posted: </h5>
+        
+        {% if view_all %}
+            <p class="card-text">{{post.body}}</p>
+        {% else %}
+            <p class="card-text">{{post.body | truncate(100)}}</p>
+        {% endif %}
+
+        <small><a href="{{url_for('social.get_a_post', id=post.id)}}">View Post</a></small>
+
+        <p class="card-text"><small class="text-muted">{{post.date_created}}</small></p>
+
+      </div>
+    </div>
+  </div>
+</div>

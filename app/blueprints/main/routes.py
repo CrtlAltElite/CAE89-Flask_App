@@ -4,11 +4,6 @@ import requests
 from .import bp as main
 from flask_login import login_required
 
-# ROUTES
-@main.route('/', methods = ['GET'])
-@login_required
-def index():
-    return render_template('index.html.j2')
 
 @main.route('/students', methods = ['GET'])
 @login_required

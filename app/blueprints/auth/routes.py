@@ -19,7 +19,7 @@ def login():
         if u and u.check_hashed_password(password):
             login_user(u)
             flash('Welcome to Fakebook!','success')
-            return redirect(url_for('main.index'))
+            return redirect(url_for('social.index'))
         flash('Incorrect Email Password Combo', 'danger')
         return render_template('login.html.j2', form=form)
     return render_template("login.html.j2", form=form)
@@ -73,7 +73,7 @@ def edit_profile():
         except:
             flash('Ther was an unexpected. Please Try again', 'danger')
             return redirect(url_for('auth.edit_profile'))
-        return redirect(url_for('main.index'))
+        return redirect(url_for('social.index'))
     return render_template('register.html.j2', form=form)
 
 @auth.route('/logout')
