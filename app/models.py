@@ -3,6 +3,11 @@ from flask_login import UserMixin # IS ONLY FOR THE USER MODEL!!!!
 from datetime import datetime as dt
 from werkzeug.security import generate_password_hash, check_password_hash
 
+followers = db.Table('followers',
+    db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('followed_id', db.Integer, db.ForeignKey('user.id')),
+)
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String)
@@ -11,6 +16,14 @@ class User(UserMixin, db.Model):
     password =  db.Column(db.String)
     created_on = db.Column(db.DateTime, default=dt.utcnow)
     icon = db.Column(db.Integer)
+    posts = db.relationship('Post', backref='author', lazy="dynamic")
+    followed = db.relationship('User',
+            secondary = followers,
+            primaryjoin=(followers.c.follower_id == id),
+            secondaryjoin=(followers.c.followed_id ==id),
+            backref=db.backref('followers', lazy='dynamic'),
+            lazy ='dynamic'
+            )
 
     # should return a unique identifing string
     def __repr__(self):
@@ -43,8 +56,57 @@ class User(UserMixin, db.Model):
     def get_icon_url(self):
         return f'https://avatars.dicebear.com/api/avataaars/{self.icon}.svg'
     
+    #WE want to be able to check if the user if following someone
+    def is_following(self, user_to_check):
+        return self.followed.filter(followers.c.followed_id == user_to_check.id).count()>0
+    
+    #follow a user
+    def follow(self, user):
+        if not self.is_following(user):
+            self.followed.append(user)
+            db.session.commit()
+
+    # unfollow a user
+    def unfollow(self, user):
+        if self.is_following(user):
+            self.followed.remove(user)
+            db.session.commit()
+ 
+    # Get all the posts I am following and my own posts
+    def followed_posts(self):
+        # get all posts for the users I am follow
+        followed = Post.query.join(followers, (Post.user_id == followers.c.followed_id)).filter(followers.c.follower_id == self.id)
+        # get all my own posts
+        self_posts = Post.query.filter_by(user_id = self.id)
+        # smoooooshh and sort
+        all_posts = followed.union(self_posts).order_by(Post.date_created.desc())
+        return all_posts
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
     # SELECT * FROM user WHERE id = ???
+
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text)
+    date_created=db.Column(db.DateTime, default=dt.utcnow)
+    date_updated=db.Column(db.DateTime, onupdate=dt.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return f'<Post: {self.id} | {self.body[:15]}>'
+
+    def edit(self, new_body):
+        self.body=new_body
+
+    def save(self):
+        db.session.add(self) #adds the post to the db session
+        db.session.commit() #save everything in the session to the db
+    
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
 

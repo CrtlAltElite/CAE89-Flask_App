@@ -4,7 +4,20 @@
 {% endblock %}
 
 {% block content %}
-    <h1>CAE-89 Is the greatest.</h1>
-    <h5>They are gonna destroy Flask</h5>
-    Because they are animals!
+    {# form to create post #}
+    <form method="POST" action="{{url_for('social.index')}}">
+        <div class="mb-3">
+            <textarea class="form-control" placeholder="What is on your mind?" name="body" style="height: 100px;"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary"><i class="bi bi-send-fill"></i>&nbsp;Post</button>
+    </form>
+
+    <h1>New Feed</h1>
+    <hr>
+    
+    {# put posts here #}
+    {% for post in posts %}
+        {% include './includes/_post.html.j2' %}
+    {% endfor %}
+
 {% endblock %}
