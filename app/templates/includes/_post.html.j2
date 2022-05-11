@@ -14,8 +14,24 @@
         {% endif %}
 
         <small><a href="{{url_for('social.get_a_post', id=post.id)}}">View Post</a></small>
+      
+        {% if current_user.id == post.author.id  %}
+          <small><a href="{{url_for('social.edit_post', id=post.id)}}">Edit</a></small>
+          <small><a href="{{url_for('social.delete_post', id=post.id)}}">Delete</a></small>
 
-        <p class="card-text"><small class="text-muted">{{post.date_created}}</small></p>
+        {% endif %}
+
+      {# 'value if true ' if condition else 'value if false' #}
+
+        <p class="card-text"><small class="text-muted">
+        {{moment(post.date_created).fromNow()}}
+        <span class="float-end" style="color:lightcoral">
+         {{'edited:' + moment(post.date_updated).fromNow() | string() if post.date_updated else '' }}
+        </span>
+
+        </small></p>
+
+
 
       </div>
     </div>

@@ -1,0 +1,31 @@
+{% extends 'base.html.j2' %}
+{% block title %}
+Discover
+{% endblock %}
+
+{% block content %}
+<h1>Discover</h1>
+<hr>
+
+{% for user in users %}
+        <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+            <div class="col-md-4">
+            <img src="{{user.get_icon_url()}}" class="img-fluid rounded-start" alt="avatar">
+            </div>
+            <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">{{user.first_name}} {{user.last_name}}</h5>
+                <p class="card-text">Maybe we will add a bio to our users in the future and show it here?</p>
+                {% if current_user.is_following(user)%}
+                <a href="{{url_for('social.unfollow', id=user.id)}}" class="btn btn-danger">Unfollow</a>
+                {% else %}
+                <a href="{{url_for('social.follow', id=user.id)}}" class="btn btn-success">Follow</a>
+                {% endif %}
+            </div>
+            </div>
+        </div>
+        </div>
+{% endfor %}
+
+{% endblock %}

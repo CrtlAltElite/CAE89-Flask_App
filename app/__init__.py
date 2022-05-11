@@ -4,14 +4,14 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
-
+from flask_moment import Moment
 
 # Init Plug-ins
 login = LoginManager()
 #init my Database manager
 db = SQLAlchemy()
 migrate = Migrate()
-
+moment = Moment()
 
 def create_app(config_class=Config):
 
@@ -24,6 +24,7 @@ def create_app(config_class=Config):
     login.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)
+    moment.init_app(app)
     
     #Configure Some Settings
     login.login_view = 'auth.login'
