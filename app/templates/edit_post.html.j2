@@ -1,0 +1,13 @@
+{% extends 'base.html.j2' %}
+{% block title %}
+Edit Post
+{% endblock %}
+
+{% block content %}
+    <form method="POST" action="">
+        <div class="mb-3">
+            <textarea class="form-control" name="body" style="height:100px">{{post.body}}</textarea>
+        </div>
+        <button type="submit" class="btn btn-warning"><i class="bi bi-send-fill"></i>&nbsp;Submit Edit</button>
+    </form>
+{% endblock %}
