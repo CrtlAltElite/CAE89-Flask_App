@@ -17,6 +17,9 @@ class User(UserMixin, db.Model):
     password =  db.Column(db.String)
     created_on = db.Column(db.DateTime, default=dt.utcnow)
     icon = db.Column(db.Integer)
+    is_admin = db.Column(db.Boolean, default=False)
+    token = db.Column(db.String, index=True, unique=True)
+    token_exp = db.Column(db.DateTime)
     posts = db.relationship('Post', backref='author', lazy="dynamic")
     followed = db.relationship('User',
             secondary = followers,
@@ -25,8 +28,6 @@ class User(UserMixin, db.Model):
             backref=db.backref('followers', lazy='dynamic'),
             lazy ='dynamic'
             )
-    token = db.Column(db.String, index=True, unique=True)
-    token_exp = db.Column(db.DateTime)
 
     ##################################################
     ############## Methods for Token auth ############
@@ -113,6 +114,18 @@ class User(UserMixin, db.Model):
         # smoooooshh and sort
         all_posts = followed.union(self_posts).order_by(Post.date_created.desc())
         return all_posts
+
+    def to_dict(self):
+        return {
+            'id':self.id,
+            'first_name':self.first_name,
+            'last_name':self.last_name,
+            'email':self.email,
+            'created_on':self.created_on,
+            'icon':self.icon,
+            'is_admin':self.is_admin,
+            'token':self.token
+        }
 
 @login.user_loader
 def load_user(id):
