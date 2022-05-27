@@ -5,6 +5,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_moment import Moment
+#New
+from flask_cors import CORS
+import os
 
 # Init Plug-ins
 login = LoginManager()
@@ -12,7 +15,10 @@ login = LoginManager()
 db = SQLAlchemy()
 migrate = Migrate()
 moment = Moment()
-
+#New 
+if os.environ.get('FLASK_ENV') == 'development':
+    cors=CORS()
+    
 def create_app(config_class=Config):
 
     # Init the app
@@ -25,7 +31,11 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
     moment.init_app(app)
-    
+    if os.environ.get('FLASK_ENV') == 'development':
+        cors.init_app(app)
+
+#New
+
     #Configure Some Settings
     login.login_view = 'auth.login'
     login.login_message = 'Log yourself in you flithy animal!'
