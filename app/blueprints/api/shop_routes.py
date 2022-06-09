@@ -28,7 +28,7 @@ def create_checkout_session():
     line_items=[]
     filtered_ids=map(lambda item: item['id'],cart)
     item_counts=Counter(filtered_ids)
-
+    print(YOUR_DOMAIN)
     for item in cart:
         if item['id'] in item_counts:
             line_items.append({
