@@ -50,7 +50,7 @@ def create_checkout_session():
             mode='payment',
             success_url=YOUR_DOMAIN + 'checkoutsuccess',
             cancel_url=YOUR_DOMAIN + 'cart/true',
-            automatic_tax={'enabled': True},
+
         )
     except Exception as e:
         return str(e)
