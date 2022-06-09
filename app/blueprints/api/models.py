@@ -52,7 +52,8 @@ class Item(db.Model):
             'price':self.price,
             'img':self.img,
             'created_on':self.created_on,
-            'category_id':self.category_id
+            'category_id':self.category_id,
+            'category_name':self.cat.name
         }
 
     def from_dict(self, data):
